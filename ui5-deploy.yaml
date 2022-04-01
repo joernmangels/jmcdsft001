@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: '2.4'
+metadata:
+  name: 'zjmcdsft001'
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          destination: vid200
+          url: http://vid:44300
+        app:
+          name: ZJMCDSFT001
+          description: zjmcdsft001
+          package: ZJMCDS
+          transport: VIDK900038

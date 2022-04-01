@@ -1,0 +1,40 @@
+specVersion: '2.4'
+metadata:
+  name: 'zjmcdsft001'
+type: application
+server:
+  customMiddleware:
+  - name: fiori-tools-proxy
+    afterMiddleware: compression
+    configuration:
+      ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+      backend:
+      - path: /sap
+        url: http://vid:44300
+        client: '200'
+        destination: vid200
+      ui5:
+        path: 
+        - /resources
+        - /test-resources
+        url: https://ui5.sap.com
+  - name: sap-fe-mockserver
+    beforeMiddleware: fiori-tools-proxy
+    configuration:
+      service:
+        urlBasePath: /sap/opu/odata/sap/ZJMCDS_C_QM_NOTI_FT001_CDS
+        name: ''
+        metadataXmlPath: ./webapp/localService/metadata.xml
+        mockdataRootPath: ./webapp/localService/mockdata
+        generateMockData: true
+  - name: fiori-tools-appreload
+    afterMiddleware: compression
+    configuration:
+     port: 35729
+     path: webapp
+     delay: 300
+  - name: fiori-tools-preview
+    afterMiddleware: fiori-tools-appreload
+    configuration:
+      component: de.mangels.jmcds1.zjmcdsft001
+      ui5Theme: sap_fiori_3
